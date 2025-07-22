@@ -1,0 +1,21 @@
+<template>
+    <lightning-card title="Featured Articles">
+        <template if:true={articles}>
+            <ul>
+                <template for:each={articles} for:item="article">
+                    <li key={article.Id}>
+                        <a href={article.articleUrl} target="_blank">
+                                {article.Title}
+                            </a>
+
+
+                        <p>{article.Summary}</p>
+                    </li>
+                </template>
+            </ul>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-color_error">Error loading articles.</p>
+        </template>
+    </lightning-card>
+</template>

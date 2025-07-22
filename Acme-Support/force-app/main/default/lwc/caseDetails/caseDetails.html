@@ -1,0 +1,91 @@
+<template>
+    <!-- Case Information -->
+    <lightning-card title="Case Information" icon-name="standard:case">
+        <div class="slds-p-horizontal_medium">
+            <template if:true={caseData}>
+                <p><strong>Subject:</strong> {caseData.Subject.value}</p>
+                <p><strong>Status:</strong> {caseData.Status.value}</p>
+                <p><strong>Priority:</strong> {caseData.Priority.value}</p>
+                <p><strong>Registration:</strong> {caseData.Registration__c.value}</p>
+            </template>
+            <template if:true={error}>
+                <p class="slds-text-color_error">Error loading case data.</p>
+            </template>
+        </div>
+    </lightning-card>
+
+    <!-- Registration Information -->
+    <lightning-card title="Registration Information" icon-name="standard:lead">
+        <div class="slds-p-horizontal_medium">
+            <template if:true={registrationData}>
+                <p><strong>Serial Number:</strong> {registrationData.Serial_Number__c.value}</p>
+                <p><strong>Registration Date:</strong> {registrationData.Registration_Date__c.value}</p>
+            </template>
+        </div>
+    </lightning-card>
+
+    <!-- Edit Case -->
+    <lightning-card title="Update Case" icon-name="utility:edit">
+        <div class="slds-p-horizontal_medium slds-grid slds-wrap slds-gutters_medium">
+            <div class="slds-col slds-size_1-of-1">
+                <lightning-combobox
+                    label="Status"
+                    value={selectedStatus}
+                    options={statusOptions}
+                    onchange={handleStatusChange}>
+                </lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-1">
+                <lightning-input-rich-text
+                    label="Internal Comments"
+                    value={internalComments}
+                    onchange={handleCommentsChange}>
+                </lightning-input-rich-text>
+            </div>
+            <div class="slds-col slds-size_1-of-1">
+                <lightning-button
+                    variant="brand"
+                    label="Save"
+                    onclick={handleSave}
+                    class="slds-m-top_medium">
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+
+    <!-- Knowledge Base Search -->
+    <lightning-card title="Knowledge Base Search" icon-name="standard:knowledge">
+        <div class="slds-p-horizontal_medium slds-grid slds-wrap slds-gutters_medium">
+            <div class="slds-col slds-size_1-of-1">
+                <lightning-input
+                    label="Search Term"
+                    value={searchTerm}
+                    onchange={handleSearchInput}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1">
+                <lightning-button
+                    label="Search"
+                    onclick={handleSearchClick}
+                    class="slds-m-top_small">
+                </lightning-button>
+            </div>
+        </div>
+
+        <div class="slds-p-horizontal_medium slds-m-top_medium">
+            <template if:true={searchResults}>
+                <template for:each={searchResults} for:item="article">
+                    <div key={article.Id} class="slds-box slds-m-bottom_small">
+                        <p><strong>Title:</strong> {article.Title}</p>
+                        <p><strong>Summary:</strong> {article.Summary}</p>
+                        <p><a href={article.UrlName} target="_blank">Read more</a></p>
+                    </div>
+                </template>
+            </template>
+
+            <template if:true={searchError}>
+                <p class="slds-text-color_error">Error: {searchError.body.message}</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

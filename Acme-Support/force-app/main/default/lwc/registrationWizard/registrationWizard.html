@@ -1,0 +1,145 @@
+<template>
+    <!-- Registration List -->
+    <lightning-card title="Your Registrations">
+        <template if:true={registrations.length}>
+            <lightning-datatable
+                key-field="Id"
+                data={registrations}
+                columns={columns}>
+            </lightning-datatable>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <template if:true={showEmpty}>
+            <p class="slds-p-around_medium">No registrations found.</p>
+        </template>
+
+        <div class="slds-m-top_medium slds-p-horizontal_medium">
+            <lightning-button label="New Registration" variant="brand" onclick={startWizard}></lightning-button>
+        </div>
+    </lightning-card>
+
+    <!-- Wizard -->
+    <template if:true={showWizard}>
+        <!-- Step 1: Record Type -->
+        <template if:true={isStep1}>
+            <lightning-card title="Step 1: Select Registration Type">
+                <div class="slds-p-horizontal_medium slds-p-vertical_small">
+                    <lightning-radio-group
+                        label="Type"
+                        options={recordTypeOptions}
+                        value={selectedRecordType}
+                        onchange={handleRecordTypeChange}
+                        type="radio">
+                    </lightning-radio-group>
+                    <div class="slds-m-top_medium">
+                        <lightning-button label="Next" variant="brand" onclick={handleNext} disabled={isNextDisabled}></lightning-button>
+                    </div>
+                </div>
+            </lightning-card>
+        </template>
+
+        <!-- Step 2: Registration Form -->
+        <template if:true={isStep2}>
+            <lightning-card title="Step 2: Registration Details">
+                <div class="slds-p-around_medium">
+                    <div class="slds-form slds-form_stacked">
+
+                        <!-- Account Lookup -->
+                        <div class="slds-form-element" style="position: relative;">
+    <label class="slds-form-element__label">Account</label>
+    <div class="slds-form-element__control">
+        <input type="text"
+               class="slds-input"
+               value={accountSearchTerm}
+               oninput={handleAccountSearch}
+               onfocus={handleAccountFocus}
+               placeholder="Search Account..." />
+
+        <template if:true={showAccountDropdown}>
+            <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-scrollable_y"
+                role="listbox"
+                style="position: absolute; z-index: 9000; background: white; width: 100%; max-height: 200px;">
+                <template for:each={accountOptions} for:item="option">
+                    <li key={option.value} class="slds-listbox__item">
+                        <div class="slds-listbox__option slds-listbox__option_plain"
+                             role="option"
+                             onclick={selectAccount}
+                             data-id={option.value}
+                             data-label={option.label}>
+                            {option.label}
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</div>
+<div class="slds-form-element" style="position: relative;">
+    <label class="slds-form-element__label">Product</label>
+    <div class="slds-form-element__control">
+        <input type="text"
+               class="slds-input"
+               value={productSearchTerm}
+               oninput={handleProductSearch}
+               onfocus={handleProfuctFocus}
+               placeholder="Search Product" />
+
+        <template if:true={showProductDropdown}>
+            <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-scrollable_y"
+                role="listbox"
+                style="position: absolute; z-index: 9000; background: white; width: 100%; max-height: 200px;">
+                <template for:each={productOptions} for:item="option">
+                    <li key={option.value} class="slds-listbox__item">
+                        <div class="slds-listbox__option slds-listbox__option_plain"
+                             role="option"
+                             onclick={selectProduct}
+                             data-id={option.value}
+                             data-label={option.label}>
+                            {option.label}
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</div>
+
+
+                       
+                        <!-- Date -->
+                        <lightning-input type="date"
+                                         name="registrationDate"
+                                         label="Registration Date"
+                                         value={formData.registrationDate}
+                                         onchange={handleInputChange}>
+                        </lightning-input>
+
+                        <!-- Serial Number -->
+                        <lightning-input name="serialNumber"
+                                         label="Serial Number"
+                                         onchange={handleInputChange}>
+                        </lightning-input>
+
+                        <!-- Email -->
+                        <lightning-input type="email"
+                                         name="email"
+                                         label="Email"
+                                         required
+                                         onchange={handleInputChange}>
+                        </lightning-input>
+
+                        <div class="slds-m-top_medium">
+                            <lightning-button variant="brand" label="Submit" onclick={handleSubmit}></lightning-button>
+                            <lightning-button label="Back" class="slds-m-left_small" onclick={handleBack}></lightning-button>
+                        </div>
+
+                    </div>
+                </div>
+            </lightning-card>
+        </template>
+    </template>
+</template>

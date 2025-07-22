@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="Submit a Support Case">
+        <div class="slds-p-around_medium slds-form_stacked">
+            
+            <!-- Account -->
+            <label class="slds-form-element__label">Account</label>
+            <div style="position: relative;">
+                <input type="text" class="slds-input" value={accountSearchTerm}
+                       oninput={handleAccountSearch} placeholder="Search Account..." />
+                <template if:true={showAccountDropdown}>
+                    <ul class="slds-dropdown slds-dropdown_fluid slds-listbox slds-listbox_vertical"
+                        style="position: absolute; z-index: 9000;">
+                        <template for:each={accountOptions} for:item="option">
+                            <li key={option.value} class="slds-listbox__item"
+                                data-id={option.value} data-label={option.label}
+                                onclick={selectAccount}>
+                                <div class="slds-listbox__option">{option.label}</div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </div>
+
+            <!-- Product -->
+            <label class="slds-form-element__label slds-m-top_medium">Product</label>
+            <div style="position: relative;">
+                <input type="text" class="slds-input" value={productSearchTerm}
+                       oninput={handleProductSearch} placeholder="Search Product..." />
+                <template if:true={showProductDropdown}>
+                    <ul class="slds-dropdown slds-dropdown_fluid slds-listbox slds-listbox_vertical"
+                        style="position: absolute; z-index: 9000;">
+                        <template for:each={productOptions} for:item="option">
+                            <li key={option.value} class="slds-listbox__item"
+                                data-id={option.value} data-label={option.label}
+                                onclick={selectProduct}>
+                                <div class="slds-listbox__option">{option.label}</div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </div>
+
+            <!-- Registration (dropdown or inline create) -->
+            <template if:false={showNewRegistrationFields}>
+                <lightning-combobox
+                    class="slds-m-top_medium"
+                    name="registrationId"
+                    label="Registration"
+                    value={formData.registrationId}
+                    options={registrationOptions}
+                    onchange={handleInputChange}>
+                </lightning-combobox>
+            </template>
+
+            <!-- Inline Registration Creation -->
+            <template if:true={showNewRegistrationFields}>
+                <p class="slds-m-top_medium slds-text-title_bold">No registration found. Enter a new one:</p>
+                <lightning-input class="slds-m-top_small" name="serialNumber" label="Serial Number"
+                                 onchange={handleNewRegistrationInput}></lightning-input>
+                <lightning-input name="email" label="Email"
+                                 onchange={handleNewRegistrationInput}></lightning-input>
+            </template>
+
+            <!-- Description -->
+            <lightning-textarea class="slds-m-top_medium" name="description" label="Description"
+                                value={formData.description} onchange={handleInputChange}></lightning-textarea>
+
+            <!-- Priority -->
+            <!-- <lightning-combobox class="slds-m-top_medium"
+                                name="priority"
+                                label="Priority"
+                                value={formData.priority}
+                                options={['Low', 'Medium', 'High'].map(x => ({ label: x, value: x }))}
+                                onchange={handleInputChange}>
+            </lightning-combobox> -->
+
+            <!-- Submit -->
+            <lightning-button class="slds-m-top_medium" variant="brand"
+                              label="Submit Case" onclick={handleSubmit}>
+            </lightning-button>
+        </div>
+    </lightning-card>
+</template>
